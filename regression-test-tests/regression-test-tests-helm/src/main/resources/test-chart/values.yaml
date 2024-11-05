@@ -1,0 +1,5 @@
+
+image:
+  name: regression-test-tests-docker
+  imagePullPolicy: IfNotPresent
+  dockerRepo: ""
