@@ -1,0 +1,84 @@
+{
+    "name": "PersonDictionary",
+    "package": "simple.test.dictionary",
+    "dictionaryTypes": [
+      {
+        "name": "nameType",
+        "simpleType": "string"
+      },
+      {
+        "name": "ssnType",
+        "simpleType": "string"
+      },
+      {
+        "name": "string",
+        "simpleType": "string"
+      },
+      {
+        "name": "customCollection",
+        "simpleType": "set"
+      },
+      {
+        "name": "ageType",
+        "simpleType": "integer",
+        "validation": {
+          "maxValue": "12",
+          "minValue": "6"
+        }
+      },
+      {
+        "name": "stringWithValidation",
+        "simpleType": "string",
+        "validation": {
+          "maxLength": 12,
+          "minLength": 5,
+          "formats": [
+            "^[a-zA-Z]+\\d+[a-zA-Z]+$"
+          ]
+        }
+      },
+      {
+        "name": "longWithValidation",
+        "simpleType": "long",
+        "validation": {
+          "maxValue": "3000",
+          "minValue": "2000"
+        }
+      },
+      {
+        "name": "shortWithValidation",
+        "simpleType": "short",
+        "validation": {
+          "maxValue": "200",
+          "minValue": "100"
+        }
+      },
+      {
+        "name": "decimalWithValidation",
+        "simpleType": "decimal",
+        "validation": {
+          "maxValue": "20.0",
+          "minValue": "10.00",
+          "scale": 2
+        }
+      },
+      {
+        "name": "doubleWithValidation",
+        "simpleType": "double",
+        "validation": {
+          "maxValue": "30.0",
+          "minValue": "20.000",
+          "scale": 3
+        }
+      },
+      {
+        "name": "floatWithValidation",
+        "simpleType": "float",
+        "validation": {
+          "maxValue": "40.0",
+          "minValue": "30.000",
+          "scale": 3
+        }
+      }
+    ]
+  }

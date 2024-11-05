@@ -1,0 +1,55 @@
+{
+    "name": "SyncSparkPipeline",
+    "package": "org.test",
+    "type": {
+        "name": "data-flow",
+        "implementation": "data-delivery-spark"
+    },
+    "fileStores": [        
+        {  
+            "name": "s3TestFile"        
+        }    
+    ], 
+    "dataLineage": true,
+    "steps": [
+        {
+            "name": "Ingest",
+            "type": "synchronous",
+            "inbound": {
+                "type": "native",
+                "nativeCollectionType": {
+                    "name": "customCollection",
+                    "package": "simple.test.dictionary"
+                },
+                "recordType": {
+                    "name": "Person",
+                    "package": "simple.test.record"
+                }
+            },
+            "outbound": {
+                "type": "native",
+                "nativeCollectionType": {
+                    "name": "customCollection",
+                    "package": "simple.test.dictionary"
+                },
+                "recordType": {
+                    "name": "Person",
+                    "package": "simple.test.record"
+                }
+            },
+            "persist": {
+                "type": "hive"
+            },
+            "alerting": {
+                "enabled": false
+            },
+            "dataProfiling": {
+                "enabled": false
+            },
+            "provenance": {
+                "enabled": true
+            },
+            "fileStores": ["s3TestFile"]
+        }
+    ]
+}
