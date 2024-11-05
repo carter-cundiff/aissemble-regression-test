@@ -26,8 +26,13 @@ sparkApp:
       env:
         - name: KRAUSENING_BASE
           value: /opt/spark/krausening/base
+        - name: "s3TestFile_FS_OVERRIDES"
+          value: '{
+            "jclouds.endpoint": "http://s3-local:4566",
+            "jclouds.s3.virtual-host-buckets": "false"
+          }'
         - name: "s3TestFile_FS_PROVIDER"
-          value: "REPLACE ME: YOUR FILE STORE PROVIDER GOES HERE!"
+          value: "s3"
         - name: "s3TestFile_FS_ACCESS_KEY_ID"
           valueFrom:
             secretKeyRef:

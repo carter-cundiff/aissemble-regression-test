@@ -9,3 +9,6 @@ aissemble-localstack-chart:
     - name: spark-infrastructure
       keys:
       - warehouse/
+    - name: test-filestore-bucket
+      keys:
+      - /

@@ -13,19 +13,31 @@ package org.test;
  * #L%
  */
 
-import java.util.Set;
-import simple.test.record.Person;
-import simple.test.record.PersonSchema;
-
-import jakarta.enterprise.context.ApplicationScoped;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.time.Instant;
-import java.util.Map;
-
-import com.boozallen.aissemble.core.metadata.MetadataModel;
+ import java.util.Set;
+ import simple.test.record.Person;
+ import simple.test.record.PersonSchema;
+ 
+ import jakarta.enterprise.context.ApplicationScoped;
+ 
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+ import java.time.Instant;
+ import java.util.Map;
+ 
+ import com.boozallen.aissemble.core.metadata.MetadataModel;
+ 
+ import java.util.List;
+ import java.util.Arrays;
+ import java.util.stream.Collectors;
+ import java.util.stream.Stream;
+ import java.nio.file.Files;
+ import java.nio.file.Path;
+ import java.nio.file.Paths;
+ import java.io.IOException;
+ 
+ import org.apache.spark.sql.Dataset;
+ import org.apache.spark.sql.Row;
 
 /**
  * Performs the business logic for Ingest.
@@ -62,9 +74,60 @@ public class Ingest extends IngestBase {
     @Override
     protected Set<Person> executeStepImpl(Set<Person> inbound) {
         // TODO: Add your business logic here for this step!
-        logger.error("Implement executeStepImpl(..) or remove this pipeline step!");
+        logger.info("Validating People");
 
-        return null;
+        PersonSchema personSchema = new PersonSchema();
+        List<Row> rows = inbound.stream().map(PersonSchema::asRow).collect(Collectors.toList());
+        Dataset<Row> dataset = sparkSession.createDataFrame(rows, personSchema.getStructType());
+
+        logger.info("=============== before validation ===================");
+        dataset.show(false);
+
+        logger.info("=============== after validation ===================");
+        dataset = personSchema.validateDataFrame(dataset);
+        dataset.show(false);
+
+        logger.info("Validated People");
+
+        logger.info("Saving People");
+        saveDataset(dataset, "People");
+        logger.info("Completed saving People");
+
+        try {
+            logger.info("Pushing file to S3 Local");
+            pushFileToS3();
+            logger.info("Fetching file from S3 Local");
+            fetchFileFromS3Local();
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("Failed to push file to S3 Local");
+        }
+
+        return inbound;
+    }
+
+    protected void pushFileToS3() {
+        String bucket = "test-filestore-bucket";
+        String fileToUpload = "push_testFileStore.txt";
+        Path localPathToFile = Paths.get("/opt/spark/work-dir/" + fileToUpload);
+        try {
+            Files.writeString(localPathToFile, "test txt file"); // Create the test file to push
+            this.s3TestFileStore.store(bucket, fileToUpload, localPathToFile); // Push file to FileStore (LocalStack S3)
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    protected void fetchFileFromS3Local() throws IOException  {
+        String bucket = "test-filestore-bucket";
+        String fileToFetch = "push_testFileStore.txt";
+        Path localPathToSaveFile = Paths.get("/opt/spark/work-dir/fetch_TestFileStore.txt");
+        this.s3TestFileStore.fetch(bucket, fileToFetch, localPathToSaveFile); // Fetches file from FileStore (LocalStack S3)
+        logger.info("Fetched file with contents: {}", Files.readAllLines(localPathToSaveFile).get(0));
+    }
+
+    @Override
+    protected Set<Person> checkAndApplyEncryptionPolicy(Set<Person> inbound) {
+        return inbound;
     }
 
 
