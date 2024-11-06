@@ -104,3 +104,11 @@ yaml = helm(
        'regression-test-deploy/src/main/resources/apps/pipeline-invocation-service/values-dev.yaml']
 )
 k8s_yaml(yaml)
+
+yaml = helm(
+   'regression-test-deploy/src/main/resources/apps/lineage-http-consumer-deploy-v2',
+   name='lineage-http-consumer-deploy-v2',
+   values=['regression-test-deploy/src/main/resources/apps/lineage-http-consumer-deploy-v2/values.yaml',
+       'regression-test-deploy/src/main/resources/apps/lineage-http-consumer-deploy-v2/values-dev.yaml']
+)
+k8s_yaml(yaml)

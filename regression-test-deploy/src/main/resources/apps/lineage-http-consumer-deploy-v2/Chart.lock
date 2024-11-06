@@ -1,0 +1,6 @@
+dependencies:
+- name: aissemble-lineage-http-consumer-chart
+  repository: oci://ghcr.io/boozallen
+  version: 1.10.0-SNAPSHOT
+digest: sha256:6b0cbb0cde13b4c07c3bb98a153822e805c4629a093df2fabc157d62ca6499f9
+generated: "2024-11-06T10:53:30.624359115-05:00"

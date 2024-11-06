@@ -200,6 +200,20 @@
                             </propertyVariables>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>lineage-http-consumer</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate-sources</goal>
+                        </goals>
+                        <configuration>
+                            <basePackage>com.boozallen.aissemble.documentation</basePackage>
+                            <profile>lineage-http-consumer-deploy-v2</profile>
+                            <propertyVariables>
+                                <appName>lineage-http-consumer-deploy-v2</appName>
+                            </propertyVariables>
+                        </configuration>
+                    </execution>
                 </executions>
                 <dependencies>
                     <dependency>
