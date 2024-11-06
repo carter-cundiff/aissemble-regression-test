@@ -82,10 +82,12 @@ public class Ingest extends IngestBase {
 
         logger.info("=============== before validation ===================");
         dataset.show(false);
+        dataset.collect();
 
         logger.info("=============== after validation ===================");
         dataset = personSchema.validateDataFrame(dataset);
         dataset.show(false);
+        dataset.collect();
 
         logger.info("Validated People");
 
@@ -94,8 +96,9 @@ public class Ingest extends IngestBase {
         logger.info("Completed saving People");
 
         try {
-            logger.info("Pushing file to S3 Local");
-            pushFileToS3();
+            String fileContent = "test file text";
+            logger.info("Pushing file to S3 Local with contents: {}", fileContent);
+            pushFileToS3(fileContent);
             logger.info("Fetching file from S3 Local");
             fetchFileFromS3Local();
         } catch (Exception e) {
@@ -106,12 +109,12 @@ public class Ingest extends IngestBase {
         return inbound;
     }
 
-    protected void pushFileToS3() {
+    protected void pushFileToS3(String fileContent) {
         String bucket = "test-filestore-bucket";
         String fileToUpload = "push_testFileStore.txt";
         Path localPathToFile = Paths.get("/opt/spark/work-dir/" + fileToUpload);
         try {
-            Files.writeString(localPathToFile, "test txt file"); // Create the test file to push
+            Files.writeString(localPathToFile, fileContent); // Create the test file to push
             this.s3TestFileStore.store(bucket, fileToUpload, localPathToFile); // Push file to FileStore (LocalStack S3)
         } catch (Exception e) {
             e.printStackTrace();
@@ -122,7 +125,7 @@ public class Ingest extends IngestBase {
         String fileToFetch = "push_testFileStore.txt";
         Path localPathToSaveFile = Paths.get("/opt/spark/work-dir/fetch_TestFileStore.txt");
         this.s3TestFileStore.fetch(bucket, fileToFetch, localPathToSaveFile); // Fetches file from FileStore (LocalStack S3)
-        logger.info("Fetched file with contents: {}", Files.readAllLines(localPathToSaveFile).get(0));
+        logger.info("Fetched file from S3 Local with contents: {}", Files.readAllLines(localPathToSaveFile).get(0));
     }
 
     @Override
