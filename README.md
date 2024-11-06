@@ -91,10 +91,50 @@ Verify you see something similar the following:
 ```
 
 **Verify Provenance:**
+```
+curl -X GET http://localhost:8082/metadata/healthcheck
+```
+Verify you see something similar the following:
+```
+Metadata service is running...
+```
 
+```
+curl -X GET http://localhost:8082/metadata
+```
+Verify you see something similar the following:
+```
+[{"resource":"Unspecified Ingest resource","subject":"synchronous","action":"Ingest","timestamp":"2024-11-06T22:12:56.755302Z","additionalValues":{}}]
+```
 
 **Verify Data Access:**
+```
+curl --location 'http://localhost:8081/graphql' \
+--header 'Content-Type: application/json' \
+--data '{"query":"{Person(table: \"People\") {name}}"}'
+```
+Verify you see something similar the following:
+  - Note: The results may contain more than one person
+```
+{"data":{"Person":[{"name":"John Smith"}]}}
+```
 
 **Verify Data Lineage:**
-In a browser, open the following url: http://localhost:3000/events. Verify there are `START` and `COMPLETE` events
-for `SyncSparkPipeline` and `SyncSparkPipeline.Ingest`.
+In a new terminal, exec into the kafka pod: `kubectl exec -it kafka-cluster-0 -- sh`. Then run the following command:
+```
+/opt/bitnami/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9093 --topic lineage-event-out --from-beginning
+```
+Verify you see something similar the following:
+```
+{"eventTime":"2024-11-06T22:12:32.354Z","producer":"http://github.com/producer","schemaURL":"https://openlineage.io/spec/2-0-2/OpenLineage.json#/$defs/RunEvent","eventType":"START","run":{"runId":"0a2ac90d-8bcb-4355-9df4-ce47ee82895c","facets":{}},"job":{"namespace":"SyncSparkPipeline","name":"SyncSparkPipeline","facets":{}}}
+{"eventTime":"2024-11-06T22:12:37.446Z","producer":"http://github.com/producer","schemaURL":"https://openlineage.io/spec/2-0-2/OpenLineage.json#/$defs/RunEvent","eventType":"START","run":{"runId":"7f89d73e-f9a0-4978-8510-e4ba00aa7214","facets":{"parent":{"_producer":"http://github.com/producer","_schemaURL":"https://openlineage.io/spec/facets/1-0-1/ParentRunFacet.json#/$defs/ParentRunFacet","run":{"runId":"0a2ac90d-8bcb-4355-9df4-ce47ee82895c"},"job":{"namespace":"SyncSparkPipeline","name":"SyncSparkPipeline"}}}},"job":{"namespace":"SyncSparkPipeline","name":"SyncSparkPipeline.Ingest","facets":{}}}
+{"eventTime":"2024-11-06T22:12:56.756Z","producer":"http://github.com/producer","schemaURL":"https://openlineage.io/spec/2-0-2/OpenLineage.json#/$defs/RunEvent","eventType":"COMPLETE","run":{"runId":"7f89d73e-f9a0-4978-8510-e4ba00aa7214","facets":{"parent":{"_producer":"http://github.com/producer","_schemaURL":"https://openlineage.io/spec/facets/1-0-1/ParentRunFacet.json#/$defs/ParentRunFacet","run":{"runId":"0a2ac90d-8bcb-4355-9df4-ce47ee82895c"},"job":{"namespace":"SyncSparkPipeline","name":"SyncSparkPipeline"}}}},"job":{"namespace":"SyncSparkPipeline","name":"SyncSparkPipeline.Ingest","facets":{}}}
+{"eventTime":"2024-11-06T22:12:56.758Z","producer":"http://github.com/producer","schemaURL":"https://openlineage.io/spec/2-0-2/OpenLineage.json#/$defs/RunEvent","eventType":"COMPLETE","run":{"runId":"0a2ac90d-8bcb-4355-9df4-ce47ee82895c","facets":{}},"job":{"namespace":"SyncSparkPipeline","name":"SyncSparkPipeline","facets":{}}}
+```
+
+**Clean Up:**
+Delete the marquez and kafka PVCs:
+```
+kubectl delete pvc data-kafka-cluster-0
+kubectl delete pvc data-marquez-postgresql-0
+```
