@@ -3,7 +3,7 @@
 echo "Setting up marquez deployment..."
 
 cd regression-test-deploy/src/main/resources/apps/marquez
-helm install marquez . --dependency-update --set postgresql.enabled=true
+helm install marquez . --dependency-update
 while : ; do
   status=$(kubectl get pods | grep -E 'marquez-[[:digit:]].+')
   if [[ $status =~ "1/1" ]] && [[ $status =~ "Running" ]]
