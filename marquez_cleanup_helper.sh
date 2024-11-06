@@ -1,19 +1,26 @@
 #!/bin/bash
 
-IFS=$'\n'
-
+# Delete the Helm release
 helm delete marquez
 
-processes=$(ps -A | grep svc/marquez)
-for line in $processes
-do
-  if [[ $line =~ 'grep' ]]
-  then
-    continue
-  else
-    echo $line
-    pid=$(echo $line | cut -d " " -f1)
-    echo "Killing process $pid"
-    kill $pid
-  fi
-done
+# Delete the marquez PVC
+kubectl delete pvc data-marquez-postgresql-0
+
+# Delete the marquez port forwards
+# Check and kill process using port 3000
+process_3000=$(lsof -t -i :3000)
+if [ -n "$process_3000" ]; then
+  echo "Killing process using port 3000: $process_3000"
+  kill "$process_3000"
+else
+  echo "No process found using port 3000"
+fi
+
+# Check and kill process using port 5000
+process_5000=$(lsof -t -i :5000)
+if [ -n "$process_5000" ]; then
+  echo "Killing process using port 5000: $process_5000"
+  kill "$process_5000"
+else
+  echo "No process found using port 5000"
+fi

@@ -99,7 +99,9 @@ web:
 postgresql:
   ## @param postgresql.enabled Deploy PostgreSQL container(s)
   ##
-  enabled: false
+  enabled: true
+  volumePermissions:
+    enabled: true
   ## Bitnami PostgreSQL image version
   ## ref: https://hub.docker.com/r/bitnami/postgresql/tags/
   ## @param image.registry PostgreSQL image registry

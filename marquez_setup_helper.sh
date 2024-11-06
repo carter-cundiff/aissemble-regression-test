@@ -2,7 +2,7 @@
 
 echo "Setting up marquez deployment..."
 
-cd test-421-deploy/src/main/resources/apps/marquez
+cd regression-test-deploy/src/main/resources/apps/marquez
 helm install marquez . --dependency-update --set postgresql.enabled=true
 while : ; do
   status=$(kubectl get pods | grep -E 'marquez-[[:digit:]].+')
