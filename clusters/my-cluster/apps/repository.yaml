@@ -5,11 +5,12 @@ metadata:
   namespace: default
 spec:
   interval: 5m0s
-  url: https://github.com/carter-cundiff/aissemble-regression-test.git
   ref:
     branch: main
   secretRef:
-    name: basic-access-auth
+    name: flux-system
+    namespace: flux-system
+  url: ssh://git@github.com/carter-cundiff/aissemble-regression-test
   ignore: |
     # exclude all
     /*
