@@ -1,18 +1,17 @@
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: GitRepository
-metadata:
-  name: policy-decision-point-repo
-  namespace: default
-spec:
-  interval: 5m0s
-  ref:
-    branch: main
-  secretRef:
-    name: flux-system
-    namespace: flux-system
-  url: ssh://git@github.com/carter-cundiff/aissemble-regression-test
-  ignore: |
-    # exclude all
-    /*
-    # include singular charts directory
-    !regression-test-deploy/src/main/resources/apps/policy-decision-point/ 
+# apiVersion: source.toolkit.fluxcd.io/v1
+# kind: GitRepository
+# metadata:
+#   name: policy-decision-point
+#   namespace: default
+# spec:
+#   interval: 5m0s
+#   url: https://github.com/carter-cundiff/aissemble-regression-test.git
+#   ref:
+#     branch: main
+#   secretRef:
+#     name: basic-access-auth
+#   ignore: |
+#     # exclude all
+#     /*
+#     # include singular charts directory
+#     !regression-test-deploy/src/main/resources/apps/policy-decision-point/ 
