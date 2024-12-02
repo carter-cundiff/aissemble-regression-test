@@ -1,19 +1,19 @@
-apiVersion: helm.toolkit.fluxcd.io/v2
-kind: HelmRelease
-metadata:
-  name: policy-decision-point
-  namespace: default
-spec:
-  interval: 1m
-  chart:
-    spec:
-      chart: ./regression-test-deploy/src/main/resources/apps/policy-decision-point
-      sourceRef:
-        kind: GitRepository
-        name: policy-decision-point-repo
-        namespace: default
-      interval: 1m
-      reconcileStrategy: Revision
-      valuesFiles:
-        - ./regression-test-deploy/src/main/resources/apps/policy-decision-point/values.yaml
-        - ./regression-test-deploy/src/main/resources/apps/policy-decision-point/values-dev.yaml
+# apiVersion: helm.toolkit.fluxcd.io/v2
+# kind: HelmRelease
+# metadata:
+#   name: policy-decision-point
+#   namespace: default
+# spec:
+#   interval: 1m
+#   chart:
+#     spec:
+#       chart: ./regression-test-deploy/src/main/resources/apps/policy-decision-point
+#       sourceRef:
+#         kind: GitRepository
+#         name: policy-decision-point-repo
+#         namespace: default
+#       interval: 1m
+#       reconcileStrategy: Revision
+#       valuesFiles:
+#         - ./regression-test-deploy/src/main/resources/apps/policy-decision-point/values.yaml
+#         - ./regression-test-deploy/src/main/resources/apps/policy-decision-point/values-dev.yaml
