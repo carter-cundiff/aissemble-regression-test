@@ -9,4 +9,4 @@ aissemble-policy-decision-point-chart:
     dockerRepo: ""
   service:
     spec:
-      type: LoadBalancer
+      type: NodePort
