@@ -1,7 +1,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
-  name: policy-decision-point
+  name: policy-decision-point-repo
   namespace: default
 spec:
   interval: 5m0s
