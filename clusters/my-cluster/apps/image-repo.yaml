@@ -1,9 +1,0 @@
-apiVersion: image.toolkit.fluxcd.io/v1beta2
-kind: ImageRepository
-metadata:
-  name: pdp-docker-image
-  namespace: default
-spec:
-  image: regression-test-policy-decision-point-docker
-  interval: 1m
-  provider: generic
